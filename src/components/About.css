@@ -1,0 +1,214 @@
+.about {
+  position: relative;
+  padding: clamp(80px, 10vw, 140px) clamp(20px, 6vw, 80px);
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.about__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: clamp(32px, 5vw, 64px);
+  align-items: center;
+  margin-bottom: 56px;
+}
+
+.about__portrait-wrap {
+  max-width: 260px;
+  margin: 0 auto;
+  width: 100%;
+}
+.about__portrait-frame {
+  position: relative;
+  padding: 10px;
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.about__portrait-glow {
+  position: absolute;
+  inset: -30px;
+  z-index: -1;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    rgba(212, 175, 55, 0.35) 40deg,
+    transparent 120deg,
+    transparent 240deg,
+    rgba(212, 175, 55, 0.25) 300deg,
+    transparent 360deg
+  );
+  filter: blur(24px);
+  opacity: 0.6;
+  animation: spinCW 24s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .about__portrait-glow {
+    animation: none;
+  }
+}
+.about__portrait {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  border-radius: 50% 50% 6px 6px;
+  overflow: hidden;
+  border: 1px solid var(--gold);
+  box-shadow: 0 0 30px rgba(212, 175, 55, 0.15);
+  animation: glowPulse 4s ease-in-out infinite;
+}
+.about__portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.about__portrait-fallback {
+  width: 100%;
+  height: 100%;
+  background:
+    radial-gradient(ellipse at 50% 35%, rgba(212, 175, 55, 0.18), transparent 60%),
+    linear-gradient(160deg, #1a1410, #0a0806);
+}
+
+.about__body {
+  text-align: center;
+}
+.about__body .eyebrow {
+  color: #8a8098;
+}
+.about__body .section-heading {
+  margin-bottom: 26px;
+}
+.about__text {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(15px, 1.6vw, 17px);
+  line-height: 1.9;
+  color: var(--parchment);
+  max-width: 680px;
+  margin: 0 auto;
+  min-height: 6.8em;
+}
+.about__caret {
+  display: inline-block;
+  width: 2px;
+  height: 1.05em;
+  vertical-align: -0.18em;
+  margin-left: 2px;
+  background: var(--gold);
+  animation: scrollPulse 1s steps(1) infinite;
+}
+
+.about__cv {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 26px;
+  padding: 11px 26px;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  font-family: 'Playfair Display', serif;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  transition: color 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+}
+.about__cv span {
+  position: relative;
+  z-index: 1;
+}
+.about__cv::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(120deg, #d4af37, #f2e2b3);
+  transform: translateY(101%);
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.about__cv:hover {
+  color: var(--bg);
+  border-color: #f2e2b3;
+  box-shadow: 0 0 22px rgba(212, 175, 55, 0.45);
+}
+.about__cv:hover::before {
+  transform: translateY(0);
+}
+
+.about__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(16px, 3vw, 28px);
+  justify-content: center;
+}
+
+/* Education / experience ledger ------------------------------- */
+.about__ledger {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: clamp(28px, 5vw, 60px);
+  max-width: 900px;
+  margin: 64px auto 0;
+}
+.about__ledger-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 13px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+}
+.about__entry {
+  margin-bottom: 22px;
+}
+.about__entry-role {
+  font-family: 'Playfair Display', serif;
+  font-size: 15px;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.about__entry-org {
+  font-family: 'Inter', sans-serif;
+  font-size: 12.5px;
+  color: var(--gold);
+  margin-bottom: 6px;
+}
+.about__entry-org span {
+  color: var(--muted);
+}
+.about__entry-meta {
+  font-family: 'Inter', sans-serif;
+  font-size: 12.5px;
+  line-height: 1.7;
+  color: var(--parchment);
+}
+.stat-card {
+  flex: 1 1 200px;
+  min-width: 180px;
+  max-width: 280px;
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  padding: 32px 20px;
+  text-align: center;
+  background: rgba(212, 175, 55, 0.03);
+}
+.stat-card__value {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(30px, 4vw, 42px);
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+.stat-card__label {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--muted);
+  text-transform: uppercase;
+}

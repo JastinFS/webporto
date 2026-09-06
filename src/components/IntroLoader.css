@@ -1,0 +1,101 @@
+.intro {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Two panels that iris apart on open ------------------------- */
+.intro__panel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: #080604;
+  transition: transform 0.9s cubic-bezier(0.76, 0, 0.24, 1);
+}
+.intro__panel--t {
+  top: 0;
+}
+.intro__panel--b {
+  bottom: 0;
+}
+.intro--open .intro__panel--t {
+  transform: translateY(-100%);
+}
+.intro--open .intro__panel--b {
+  transform: translateY(100%);
+}
+
+/* Centre sigil --------------------------------------------- */
+.intro__core {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  transition: opacity 0.5s ease;
+}
+.intro--open .intro__core {
+  opacity: 0;
+}
+
+.intro__sigil {
+  width: 132px;
+  height: 132px;
+  animation: spinCW 18s linear infinite;
+}
+.intro__draw {
+  fill: none;
+  stroke: #d4af37;
+  stroke-width: 1.4;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: introDraw 1.5s ease forwards;
+}
+.intro__draw--d2 {
+  animation-delay: 0.15s;
+  stroke: #b8a98a;
+}
+.intro__draw--d3 {
+  animation-delay: 0.3s;
+}
+.intro__draw--d4 {
+  animation-delay: 0.45s;
+  stroke: #b8a98a;
+}
+@keyframes introDraw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.intro__mono {
+  position: absolute;
+  font-family: 'Playfair Display', serif;
+  font-size: 30px;
+  font-weight: 700;
+  color: #e8dcc4;
+  letter-spacing: 2px;
+  text-shadow: 0 0 24px rgba(212, 175, 55, 0.5);
+}
+
+.intro__pct {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 13px;
+  letter-spacing: 6px;
+  color: #8a8098;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro__sigil {
+    animation: none;
+  }
+  .intro__draw {
+    animation-duration: 0.2s;
+    animation-delay: 0s !important;
+  }
+}

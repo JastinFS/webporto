@@ -1,0 +1,92 @@
+.atmos {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Drifting ether glows ---------------------------------------- */
+.atmos__glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.5;
+  mix-blend-mode: screen;
+  will-change: transform;
+}
+.atmos__glow--1 {
+  width: 46vw;
+  height: 46vw;
+  left: -8vw;
+  top: -6vw;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.28), transparent 70%);
+  animation: etherDrift1 34s ease-in-out infinite;
+}
+.atmos__glow--2 {
+  width: 40vw;
+  height: 40vw;
+  right: -10vw;
+  top: 28vh;
+  background: radial-gradient(circle, rgba(120, 84, 176, 0.22), transparent 70%);
+  animation: etherDrift2 44s ease-in-out infinite;
+}
+.atmos__glow--3 {
+  width: 52vw;
+  height: 52vw;
+  left: 20vw;
+  bottom: -20vw;
+  background: radial-gradient(circle, rgba(90, 60, 30, 0.3), transparent 70%);
+  animation: etherDrift3 52s ease-in-out infinite;
+}
+
+@keyframes etherDrift1 {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(6vw, 8vh, 0) scale(1.15); }
+}
+@keyframes etherDrift2 {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1.05); }
+  50% { transform: translate3d(-8vw, -6vh, 0) scale(1); }
+}
+@keyframes etherDrift3 {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(-5vw, -10vh, 0) scale(1.2); }
+}
+
+/* Film grain ------------------------------------------------- */
+.atmos__grain {
+  position: absolute;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+  opacity: 0.05;
+  animation: grainShift 0.6s steps(1) infinite;
+}
+@keyframes grainShift {
+  0% { transform: translate3d(0, 0, 0); }
+  10% { transform: translate3d(-4%, -3%, 0); }
+  20% { transform: translate3d(3%, 2%, 0); }
+  30% { transform: translate3d(-2%, 4%, 0); }
+  40% { transform: translate3d(4%, -1%, 0); }
+  50% { transform: translate3d(-3%, 3%, 0); }
+  60% { transform: translate3d(2%, -4%, 0); }
+  70% { transform: translate3d(-4%, 1%, 0); }
+  80% { transform: translate3d(3%, 3%, 0); }
+  90% { transform: translate3d(-1%, -2%, 0); }
+  100% { transform: translate3d(0, 0, 0); }
+}
+
+/* Corner vignette ------------------------------------------- */
+.atmos__vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 40%, transparent 45%, rgba(4, 3, 2, 0.55) 100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .atmos__glow,
+  .atmos__grain {
+    animation: none;
+  }
+}

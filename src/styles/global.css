@@ -1,0 +1,178 @@
+/* ============================================================
+   Jastin Sitompul — Portfolio
+   "Lord of the Mysteries" themed. Global tokens, resets,
+   keyframes and shared utility animations.
+   ============================================================ */
+
+:root {
+  --bg: #0a0a0a;
+  --ink: #e8dcc4;        /* primary cream text */
+  --gold: #d4af37;       /* mystic gold accent  */
+  --parchment: #c7bfa8;
+  --muted: #8a8098;
+  --muted-warm: #b8a98a;
+  --faint: #5a5460;
+  --panel: #080604;      /* projects section    */
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  color: var(--ink);
+}
+
+::selection {
+  background: rgba(212, 175, 55, 0.35);
+  color: var(--ink);
+}
+
+/* Lenis smooth scroll ---------------------------------------- */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+a {
+  color: inherit;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* Firefox scrollbar */
+html {
+  scrollbar-color: rgba(212, 175, 55, 0.4) transparent;
+}
+/* WebKit scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #050403;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(212, 175, 55, 0.28);
+  border-radius: 6px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(212, 175, 55, 0.5);
+}
+
+/* ------------------------------------------------------------
+   Keyframes (ported 1:1 from the design prototype)
+   ------------------------------------------------------------ */
+@keyframes fogDrift {
+  0% { transform: translate3d(-4%, 0, 0) scale(1); }
+  50% { transform: translate3d(3%, -2%, 0) scale(1.08); }
+  100% { transform: translate3d(-4%, 0, 0) scale(1); }
+}
+@keyframes fogDrift2 {
+  0% { transform: translate3d(3%, 2%, 0) scale(1.05); }
+  50% { transform: translate3d(-5%, -1%, 0) scale(1); }
+  100% { transform: translate3d(3%, 2%, 0) scale(1.05); }
+}
+@keyframes particleFloat {
+  0% { transform: translate3d(0, 0, 0); opacity: 0; }
+  10% { opacity: 0.6; }
+  90% { opacity: 0.4; }
+  100% { transform: translate3d(10px, -140px, 0); opacity: 0; }
+}
+@keyframes scrollPulse {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 1; }
+}
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 12px rgba(212, 175, 55, 0.15); }
+  50% { box-shadow: 0 0 24px rgba(212, 175, 55, 0.35); }
+}
+@keyframes runeSpinCW {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+@keyframes runeSpinCCW {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(-360deg); }
+}
+/* Standalone spinners (not centred with translate) */
+@keyframes spinCW {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes spinCCW {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
+@keyframes raysRotate {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+@keyframes corePulse {
+  0%, 100% { opacity: 0.55; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 0.9; transform: translate(-50%, -50%) scale(1.08); }
+}
+@keyframes titleGlow {
+  0%, 100% { text-shadow: 0 0 40px rgba(212, 175, 55, 0.25), 0 0 80px rgba(212, 175, 55, 0.08); }
+  50% { text-shadow: 0 0 60px rgba(212, 175, 55, 0.45), 0 0 120px rgba(212, 175, 55, 0.18); }
+}
+@keyframes glitchAnim1 {
+  0%, 94%, 100% { opacity: 0; clip-path: inset(0 0 100% 0); transform: translate(0, 0); }
+  95% { opacity: 1; clip-path: inset(15% 0 60% 0); transform: translate(-3px, 0); }
+  96% { opacity: 1; clip-path: inset(60% 0 10% 0); transform: translate(3px, 0); }
+  97% { opacity: 1; clip-path: inset(30% 0 45% 0); transform: translate(-2px, 0); }
+  98% { opacity: 0; clip-path: inset(0 0 100% 0); transform: translate(0, 0); }
+}
+@keyframes glitchAnim2 {
+  0%, 93%, 100% { opacity: 0; clip-path: inset(0 0 100% 0); transform: translate(0, 0); }
+  94% { opacity: 1; clip-path: inset(70% 0 5% 0); transform: translate(3px, 0); }
+  95% { opacity: 1; clip-path: inset(10% 0 70% 0); transform: translate(-3px, 0); }
+  96% { opacity: 1; clip-path: inset(40% 0 30% 0); transform: translate(2px, 0); }
+  97% { opacity: 0; clip-path: inset(0 0 100% 0); transform: translate(0, 0); }
+}
+@keyframes gallerySlide {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
+}
+@keyframes tickerSlide {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
+}
+@keyframes cardBob {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-9px); }
+}
+
+/* Respect users who prefer less motion: keep the piece legible,
+   drop the perpetual loops and long transitions. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,125 @@
+# ============================================================
+#  Decap CMS — panel admin konten portfolio
+#  Buka di:  <alamat-website>/admin/
+#
+#  GANTI baris `repo:` di bawah dengan repo GitHub kamu
+#  (format: username/nama-repo) setelah kamu pilih hosting.
+#  Panduan lengkap ada di DEPLOY.md.
+# ============================================================
+
+backend:
+  name: github
+  repo: JastinFS/portfolio        # <-- GANTI ke "username/nama-repo" milikmu
+  branch: main
+
+# Membuat tombol "Working with a local repo" saat dev:
+#   1) jalankan:  npx decap-server
+#   2) jalankan:  npm run dev
+#   3) buka:      http://localhost:5173/admin/
+# Tanpa login GitHub, langsung menulis file di komputermu.
+local_backend: true
+
+media_folder: "public/uploads"     # tempat gambar disimpan di repo
+public_folder: "/uploads"          # path gambar saat dipakai di web
+
+publish_mode: simple
+
+collections:
+  # ---------------- PROJECTS ----------------
+  - name: "projects"
+    label: "Projects"
+    label_singular: "Project"
+    folder: "content/projects"
+    create: true
+    delete: true
+    slug: "{{fields.short | slugify}}"
+    summary: "{{fields.order}} — {{title}}"
+    sortable_fields: ["order", "title"]
+    fields:
+      - { label: "Judul lengkap", name: "title", widget: "string" }
+      - { label: "Nama pendek (untuk kartu)", name: "short", widget: "string" }
+      - { label: "Urutan tampil (kecil = duluan)", name: "order", widget: "number", default: 10, value_type: "int" }
+      - { label: "Unggulan?", name: "featured", widget: "boolean", default: false }
+      - { label: "Kategori", name: "category", widget: "string", required: false, hint: "mis. Personal Project, Thesis, Freelance" }
+      - { label: "Tech / tags", name: "tags", widget: "list", default: [], hint: "Enter tiap teknologi. 3 pertama tampil di kartu." }
+      - { label: "Gambar sampul", name: "cover", widget: "image", required: false, choose_url: false }
+      - label: "Galeri (slider di popup)"
+        name: "gallery"
+        widget: "list"
+        required: false
+        field: { label: "Gambar", name: "image", widget: "image", choose_url: false }
+      - { label: "URL Repo (GitHub)", name: "repo", widget: "string", required: false }
+      - { label: "URL Demo / Live", name: "demo", widget: "string", required: false }
+      - { label: "Deskripsi", name: "body", widget: "markdown", hint: "Boleh pakai bullet list & **tebal**." }
+
+  # ---------------- HALAMAN (teks tetap) ----------------
+  - name: "pages"
+    label: "Halaman & Info"
+    editor: { preview: false }
+    files:
+      - name: "site"
+        label: "Info Utama (nama, kontak, CV)"
+        file: "content/site.md"
+        fields:
+          - { label: "Nama lengkap", name: "name", widget: "string" }
+          - { label: "Nama di navbar", name: "navName", widget: "string" }
+          - { label: "Monogram (2 huruf)", name: "monogram", widget: "string" }
+          - { label: "Baris peran", name: "roleLine", widget: "string" }
+          - { label: "Hero — kicker", name: "heroKicker", widget: "string" }
+          - { label: "Hero — baris 1", name: "heroFirst", widget: "string" }
+          - { label: "Hero — baris berikut (dipisah spasi = pindah baris)", name: "heroRest", widget: "string" }
+          - { label: "Hero — gambar latar", name: "heroImage", widget: "image", required: false, choose_url: false }
+          - { label: "Email", name: "email", widget: "string" }
+          - { label: "No. HP", name: "phone", widget: "string", required: false }
+          - { label: "URL GitHub", name: "github", widget: "string" }
+          - { label: "URL LinkedIn", name: "linkedin", widget: "string" }
+          - { label: "File CV", name: "cvFile", widget: "file", required: false }
+          - { label: "Tahun (footer)", name: "year", widget: "string" }
+
+      - name: "about"
+        label: "About (ringkasan, pendidikan, pengalaman)"
+        file: "content/about.md"
+        fields:
+          - { label: "Eyebrow", name: "eyebrow", widget: "string" }
+          - { label: "Judul section", name: "heading", widget: "string" }
+          - { label: "Foto", name: "portrait", widget: "image", required: false, choose_url: false }
+          - label: "Statistik (3 kartu)"
+            name: "stats"
+            widget: "list"
+            fields:
+              - { label: "Angka", name: "value", widget: "string" }
+              - { label: "Label", name: "label", widget: "string" }
+          - label: "Pendidikan"
+            name: "education"
+            widget: "object"
+            fields:
+              - { label: "Kampus", name: "school", widget: "string" }
+              - { label: "Gelar / jurusan", name: "degree", widget: "string" }
+              - { label: "Detail", name: "detail", widget: "string" }
+          - label: "Pengalaman"
+            name: "experience"
+            widget: "list"
+            fields:
+              - { label: "Posisi", name: "role", widget: "string" }
+              - { label: "Instansi", name: "org", widget: "string" }
+              - { label: "Periode", name: "period", widget: "string" }
+              - { label: "Deskripsi", name: "detail", widget: "text" }
+          - { label: "Ringkasan (paragraf)", name: "body", widget: "markdown" }
+
+      - name: "skills"
+        label: "Skills (kartu tarot & marquee)"
+        fields:
+          - { label: "Eyebrow", name: "eyebrow", widget: "string" }
+          - { label: "Judul section", name: "heading", widget: "string" }
+          - { label: "Hint", name: "hint", widget: "string" }
+          - label: "Kartu (6)"
+            name: "cards"
+            widget: "list"
+            fields:
+              - { label: "ID (jangan diubah)", name: "id", widget: "string" }
+              - { label: "Ikon (hieroglif)", name: "icon", widget: "string" }
+              - { label: "Judul", name: "title", widget: "string" }
+              - { label: "Gambar", name: "image", widget: "image", choose_url: false }
+              - { label: "Deskripsi", name: "desc", widget: "text" }
+          - { label: "Marquee (daftar tools)", name: "marquee", widget: "list" }
+        file: "content/skills.md"

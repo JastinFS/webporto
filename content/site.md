@@ -1,0 +1,16 @@
+---
+name: "Jastin Fadillah Sitompul"
+navName: "JASTIN SITOMPUL"
+monogram: "JS"
+roleLine: "Data Analyst · Machine Learning · Web Developer"
+heroKicker: "Web Developer & Data Enthusiast"
+heroFirst: "JASTIN"
+heroRest: "FADILLAH SITOMPUL"
+heroImage: ""
+email: "jastinfadillah07@gmail.com"
+phone: "085210074607"
+github: "https://github.com/JastinFS"
+linkedin: "https://linkedin.com/in/jastin-sitompul-3485b1278"
+cvFile: "/uploads/CV_Jastin_Fadillah_Sitompul.docx"
+year: "2026"
+---

@@ -1,0 +1,46 @@
+.back-top {
+  position: fixed;
+  right: clamp(16px, 4vw, 36px);
+  bottom: clamp(16px, 4vw, 36px);
+  width: 52px;
+  height: 52px;
+  z-index: 250;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  border-radius: 50%;
+  background: linear-gradient(160deg, rgba(24, 18, 14, 0.9), rgba(8, 6, 5, 0.95));
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(20px) scale(0.8);
+  pointer-events: none;
+  transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 0.3s ease, border-color 0.3s ease;
+}
+.back-top--in {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+.back-top:hover {
+  border-color: rgba(242, 226, 179, 0.8);
+  box-shadow: 0 0 26px rgba(212, 175, 55, 0.4);
+}
+.back-top svg {
+  animation: spinCW 24s linear infinite;
+}
+.back-top__ring {
+  position: absolute;
+  inset: -1px;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  border-top-color: rgba(212, 175, 55, 0.8);
+  animation: spinCW 3s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .back-top svg,
+  .back-top__ring {
+    animation: none;
+  }
+}
