@@ -231,8 +231,16 @@ export default function WallOfFame() {
                 if (e.key === 'Enter') setReading(n);
               }}
             >
-              <div className="wall-note__paper">
-                <img src={n.doodle} alt={`Note by ${n.name}`} draggable={false} />
+              <div className="wall-note__card">
+                <div className="wall-note__paper">
+                  <img src={n.doodle} alt={`Note by ${n.name}`} draggable={false} />
+                </div>
+                <div className="wall-note__label">
+                  <span className="wall-note__who">
+                    <span className="wall-note__dot" /> {n.name}
+                  </span>
+                  <span className="wall-note__title">{n.title}</span>
+                </div>
                 {adminKey && (
                   <button
                     className="wall-note__del"
@@ -246,12 +254,6 @@ export default function WallOfFame() {
                     ×
                   </button>
                 )}
-              </div>
-              <div className="wall-note__label">
-                <span className="wall-note__who">
-                  <span className="wall-note__dot" /> {n.name}
-                </span>
-                <span className="wall-note__title">{n.title}</span>
               </div>
             </div>
           );

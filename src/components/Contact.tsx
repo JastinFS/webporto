@@ -123,18 +123,6 @@ export default function Contact() {
           </button>
         </form>
       )}
-
-      <footer className="contact__footer">
-        <div className="contact__copy">© {SITE.year} {SITE.name}</div>
-        <div className="contact__links">
-          <a href={`mailto:${SITE.email}`}>EMAIL</a>
-          <a href={SITE.github} target="_blank" rel="noreferrer">GITHUB</a>
-          <a href={SITE.linkedin} target="_blank" rel="noreferrer">LINKEDIN</a>
-          {SITE.cvFile && (
-            <a href={SITE.cvFile} target="_blank" rel="noreferrer">CV</a>
-          )}
-        </div>
-      </footer>
     </section>
   );
 }

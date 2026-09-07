@@ -9,8 +9,8 @@ const LINKS = [
   { id: 'skills', label: 'SKILLS' },
   { id: 'certifications', label: 'CERTS' },
   { id: 'projects', label: 'PROJECTS' },
-  { id: 'wall', label: 'WALL' },
   { id: 'contact', label: 'CONTACT' },
+  { id: 'wall', label: 'WALL' },
 ];
 
 export default function Navbar() {

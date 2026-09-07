@@ -16,6 +16,7 @@ import Certifications from './components/Certifications';
 import Projects from './components/Projects';
 import WallOfFame from './components/WallOfFame';
 import Contact from './components/Contact';
+import Footer from './components/Footer';
 import './App.css';
 
 export default function App() {
@@ -39,8 +40,9 @@ export default function App() {
           <Skills />
           <ErrorBoundary><Certifications /></ErrorBoundary>
           <Projects />
-          <ErrorBoundary><WallOfFame /></ErrorBoundary>
           <Contact />
+          <ErrorBoundary><WallOfFame /></ErrorBoundary>
+          <Footer />
         </main>
         <BackToTop />
       </div>

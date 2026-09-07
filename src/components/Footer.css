@@ -1,0 +1,32 @@
+.site-footer {
+  margin: 0 auto;
+  padding: 40px clamp(20px, 6vw, 80px) 56px;
+  border-top: 1px solid rgba(212, 175, 55, 0.15);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  max-width: 1180px;
+}
+.site-footer__copy {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 13px;
+  color: var(--faint);
+  letter-spacing: 1px;
+}
+.site-footer__links {
+  display: flex;
+  gap: 28px;
+  flex-wrap: wrap;
+}
+.site-footer__links a {
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+.site-footer__links a:hover {
+  color: var(--gold);
+}
