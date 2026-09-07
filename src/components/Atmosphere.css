@@ -90,3 +90,15 @@
     animation: none;
   }
 }
+
+/* lighter ambience on phones (GPU / battery) */
+@media (max-width: 640px) {
+  .atmos__glow {
+    filter: blur(60px);
+    animation: none;
+  }
+  .atmos__grain {
+    animation: none;
+    opacity: 0.04;
+  }
+}

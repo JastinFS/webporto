@@ -64,7 +64,7 @@ export default function About({
           >
             <div className="about__portrait">
               {portrait ? (
-                <img src={portrait} alt={`Potret ${SITE.name}`} className="img-reveal" />
+                <img src={portrait} alt={`Potret ${SITE.name}`} className="img-reveal" loading="lazy" decoding="async" />
               ) : (
                 <div className="about__portrait-fallback img-reveal" aria-hidden="true" />
               )}

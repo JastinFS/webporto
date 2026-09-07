@@ -16,6 +16,7 @@ const LINKS = [
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState<string | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
   const ctaRef = useMagnetic<HTMLButtonElement>();
 
   useEffect(() => {
@@ -43,8 +44,20 @@ export default function Navbar() {
     return () => obs.disconnect();
   }, []);
 
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? 'hidden' : '';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [menuOpen]);
+
+  const go = (id: string) => {
+    setMenuOpen(false);
+    smoothScrollTo(id);
+  };
+
   return (
-    <nav className={`nav${scrolled ? ' nav--scrolled' : ''}`}>
+    <nav className={`nav${scrolled || menuOpen ? ' nav--scrolled' : ''}`}>
       <button className="nav__brand" onClick={scrollToTop} aria-label="Kembali ke atas">
         <span className="nav__mark">{SITE.monogram}</span>
         <span className="nav__name">{SITE.navName}</span>
@@ -65,6 +78,29 @@ export default function Navbar() {
       <button ref={ctaRef} className="nav__cta" onClick={() => smoothScrollTo('projects')}>
         <span>VIEW MY WORK</span>
       </button>
+
+      <button
+        className={`nav__burger${menuOpen ? ' is-open' : ''}`}
+        onClick={() => setMenuOpen((v) => !v)}
+        aria-label={menuOpen ? 'Tutup menu' : 'Buka menu'}
+        aria-expanded={menuOpen}
+      >
+        <span />
+        <span />
+        <span />
+      </button>
+
+      <div className={`nav__drawer${menuOpen ? ' is-open' : ''}`} hidden={!menuOpen}>
+        {LINKS.map((l) => (
+          <button
+            key={l.id}
+            className={`nav__drawer-link${active === l.id ? ' is-active' : ''}`}
+            onClick={() => go(l.id)}
+          >
+            {l.label}
+          </button>
+        ))}
+      </div>
     </nav>
   );
 }

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { PointerEvent as ReactPointerEvent } from 'react';
 import { useReveal } from '../hooks/useReveal';
+import { useMediaQuery } from '../hooks/useMediaQuery';
 import { SideOrnament, RuneTriangle } from './Ornaments';
 import DoodleModal from './DoodleModal';
 import './WallOfFame.css';
@@ -62,6 +63,7 @@ function layoutPos(notes: Note[], mode: Layout, salt: string): Record<string, Po
 
 export default function WallOfFame() {
   const { ref, visible } = useReveal<HTMLElement>();
+  const compact = useMediaQuery('(max-width: 640px)');
   const [notes, setNotes] = useState<Note[]>([]);
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
@@ -158,6 +160,33 @@ export default function WallOfFame() {
     setDrag({});
   }, []);
 
+  const noteCard = (n: Note) => (
+    <div className="wall-note__card">
+      <div className="wall-note__paper">
+        <img src={n.doodle} alt={`Note by ${n.name}`} draggable={false} />
+      </div>
+      <div className="wall-note__label">
+        <span className="wall-note__who">
+          <span className="wall-note__dot" /> {n.name}
+        </span>
+        <span className="wall-note__title">{n.title}</span>
+      </div>
+      {adminKey && (
+        <button
+          className="wall-note__del"
+          onClick={(e) => {
+            e.stopPropagation();
+            removeNote(n.id);
+          }}
+          onPointerDown={(e) => e.stopPropagation()}
+          aria-label="Hapus catatan ini"
+        >
+          ×
+        </button>
+      )}
+    </div>
+  );
+
   return (
     <section
       id="wall"
@@ -177,26 +206,30 @@ export default function WallOfFame() {
         <p className="wall__sub">Doodles and messages left by people who stopped by.</p>
 
         <div className="wall__controls">
-          <button
-            className="wall__icon-btn"
-            onClick={() => setMode((m) => (m === 'scatter' ? 'grid' : 'scatter'))}
-            aria-label="Ganti tata letak"
-            title={mode === 'scatter' ? 'Rapikan' : 'Sebar'}
-          >
-            {mode === 'scatter' ? '▦' : '✦'}
-          </button>
-          <button
-            className="wall__icon-btn"
-            onClick={() => {
-              setMode('scatter');
-              setSalt(Math.random().toString(36).slice(2, 6));
-              setDrag({});
-            }}
-            aria-label="Acak posisi"
-            title="Acak"
-          >
-            ⤨
-          </button>
+          {!compact && (
+            <>
+              <button
+                className="wall__icon-btn"
+                onClick={() => setMode((m) => (m === 'scatter' ? 'grid' : 'scatter'))}
+                aria-label="Ganti tata letak"
+                title={mode === 'scatter' ? 'Rapikan' : 'Sebar'}
+              >
+                {mode === 'scatter' ? '▦' : '✦'}
+              </button>
+              <button
+                className="wall__icon-btn"
+                onClick={() => {
+                  setMode('scatter');
+                  setSalt(Math.random().toString(36).slice(2, 6));
+                  setDrag({});
+                }}
+                aria-label="Acak posisi"
+                title="Acak"
+              >
+                ⤨
+              </button>
+            </>
+          )}
           <button className="wall__leave" onClick={() => setOpen(true)}>
             Leave a note
           </button>
@@ -208,58 +241,53 @@ export default function WallOfFame() {
         </div>
       </div>
 
-      <div className="wall__board" ref={boardRef} onPointerMove={onPointerMove} onPointerUp={onPointerUp}>
-        {!loading && notes.length === 0 && (
-          <p className="wall__empty">Be the first to leave a mark.</p>
-        )}
-        {notes.map((n) => {
-          const p = posOf(n.id);
-          return (
+      {compact ? (
+        <div className="wall__grid">
+          {!loading && notes.length === 0 && (
+            <p className="wall__empty wall__empty--flow">Be the first to leave a mark.</p>
+          )}
+          {notes.map((n) => (
             <div
               key={n.id}
-              className="wall-note"
-              style={{
-                left: `${p.x}%`,
-                top: `${p.y}%`,
-                transform: `rotate(${p.rot}deg)`,
-              }}
-              onPointerDown={(e) => onPointerDown(e, n)}
-              onClick={() => handleCardClick(n)}
+              className="wall-note wall-note--flow"
+              onClick={() => setReading(n)}
               role="button"
               tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') setReading(n);
-              }}
+              onKeyDown={(e) => e.key === 'Enter' && setReading(n)}
             >
-              <div className="wall-note__card">
-                <div className="wall-note__paper">
-                  <img src={n.doodle} alt={`Note by ${n.name}`} draggable={false} />
-                </div>
-                <div className="wall-note__label">
-                  <span className="wall-note__who">
-                    <span className="wall-note__dot" /> {n.name}
-                  </span>
-                  <span className="wall-note__title">{n.title}</span>
-                </div>
-                {adminKey && (
-                  <button
-                    className="wall-note__del"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      removeNote(n.id);
-                    }}
-                    onPointerDown={(e) => e.stopPropagation()}
-                    aria-label="Hapus catatan ini"
-                  >
-                    ×
-                  </button>
-                )}
-              </div>
+              {noteCard(n)}
             </div>
-          );
-        })}
-      </div>
-      <p className="wall__hint">Drag a card to move it · Click to read it</p>
+          ))}
+        </div>
+      ) : (
+        <div className="wall__board" ref={boardRef} onPointerMove={onPointerMove} onPointerUp={onPointerUp}>
+          {!loading && notes.length === 0 && (
+            <p className="wall__empty">Be the first to leave a mark.</p>
+          )}
+          {notes.map((n) => {
+            const p = posOf(n.id);
+            return (
+              <div
+                key={n.id}
+                className="wall-note"
+                style={{ left: `${p.x}%`, top: `${p.y}%`, transform: `rotate(${p.rot}deg)` }}
+                onPointerDown={(e) => onPointerDown(e, n)}
+                onClick={() => handleCardClick(n)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') setReading(n);
+                }}
+              >
+                {noteCard(n)}
+              </div>
+            );
+          })}
+        </div>
+      )}
+      <p className="wall__hint">
+        {compact ? 'Ketuk kartu untuk membacanya' : 'Drag a card to move it · Click to read it'}
+      </p>
 
       {open && (
         <DoodleModal

@@ -83,7 +83,7 @@ export default function Skills() {
               <div className="arcana__inner">
                 <div className="arcana__face arcana__front">
                   <div className="arcana__art">
-                    {sk.image ? <img src={sk.image} alt="" /> : <div className="arcana__art-fallback" />}
+                    {sk.image ? <img src={sk.image} alt="" loading="lazy" decoding="async" /> : <div className="arcana__art-fallback" />}
                   </div>
                   <div className="arcana__scrim" />
                   <div className="arcana__icon">{sk.icon}</div>

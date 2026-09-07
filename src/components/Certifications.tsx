@@ -36,7 +36,7 @@ export default function Certifications() {
           >
             <div className="cert-card__preview">
               {c.preview ? (
-                <img src={c.preview} alt={`${c.title} — ${c.issuer}`} loading="lazy" />
+                <img src={c.preview} alt={`${c.title} — ${c.issuer}`} loading="lazy" decoding="async" />
               ) : (
                 <div className="cert-card__preview-fallback" aria-hidden="true">
                   <svg viewBox="0 0 40 40" width="46" height="46">

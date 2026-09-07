@@ -299,3 +299,26 @@
     transform: none;
   }
 }
+
+/* mobile: simple scrollable grid, no drag ------------------- */
+.wall__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+  width: min(460px, 100%);
+  margin: 24px auto 0;
+}
+.wall-note--flow {
+  position: static;
+  width: 100%;
+  transform: none;
+  cursor: pointer;
+  will-change: auto;
+}
+.wall__empty--flow {
+  position: static;
+  inset: auto;
+  grid-column: 1 / -1;
+  padding: 36px 0;
+  text-align: center;
+}
