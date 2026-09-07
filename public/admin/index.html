@@ -5,20 +5,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex" />
     <title>Panel Konten — Portfolio</title>
+    <style>
+      /* floating shortcut to the Wall of Fame moderation page */
+      #wall-mod-link {
+        position: fixed;
+        left: 14px;
+        bottom: 14px;
+        z-index: 9999;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 14px;
+        border-radius: 8px;
+        background: #111;
+        color: #e8dcc4;
+        font: 600 13px/1 system-ui, -apple-system, "Segoe UI", sans-serif;
+        text-decoration: none;
+        border: 1px solid #d4af37;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+      }
+      #wall-mod-link:hover {
+        background: #d4af37;
+        color: #111;
+      }
+    </style>
   </head>
   <body>
     <!-- Decap CMS -->
     <script src="https://cdn.jsdelivr.net/npm/decap-cms@^3.6.4/dist/decap-cms.js"></script>
     <script>
-      // Extra sidebar item -> Wall of Fame moderation page
-      if (window.CMS && typeof window.CMS.registerAdditionalLink === 'function') {
-        window.CMS.registerAdditionalLink({
-          id: 'wall-moderation',
-          title: 'Wall of Fame (moderasi)',
-          data: '/admin/wall.html',
-          options: { iconName: 'page' },
-        });
-      }
+      // 1) try Decap's own sidebar link API (best effort, version-dependent)
+      (function registerLink(tries) {
+        if (window.CMS && typeof window.CMS.registerAdditionalLink === 'function') {
+          try {
+            window.CMS.registerAdditionalLink({
+              id: 'wall-moderation',
+              title: 'Wall of Fame (moderasi)',
+              data: '/admin/wall.html',
+              options: { iconName: 'page' },
+            });
+          } catch (e) {}
+        } else if (tries > 0) {
+          setTimeout(function () { registerLink(tries - 1); }, 300);
+        }
+      })(20);
+
+      // 2) always-visible floating shortcut (works regardless of Decap version)
+      var a = document.createElement('a');
+      a.id = 'wall-mod-link';
+      a.href = '/admin/wall.html';
+      a.textContent = '🖊  Wall of Fame — moderasi';
+      document.body.appendChild(a);
     </script>
   </body>
 </html>
