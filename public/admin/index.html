@@ -41,7 +41,7 @@
             window.CMS.registerAdditionalLink({
               id: 'wall-moderation',
               title: 'Wall of Fame (moderasi)',
-              data: '/admin/wall.html',
+              data: '/admin/wall',
               options: { iconName: 'page' },
             });
           } catch (e) {}
@@ -53,7 +53,7 @@
       // 2) always-visible floating shortcut (works regardless of Decap version)
       var a = document.createElement('a');
       a.id = 'wall-mod-link';
-      a.href = '/admin/wall.html';
+      a.href = '/admin/wall';
       a.textContent = '🖊  Wall of Fame — moderasi';
       document.body.appendChild(a);
     </script>
