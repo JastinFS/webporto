@@ -7,8 +7,8 @@ credentialId: "CFLT-20260120-OL00735"
 tags:
   - "English Proficiency"
   - "Score 503"
-file: "/uploads/certs/english-proficiency.pdf"
-preview: "/uploads/certs/english-proficiency-preview.webp"
+file: "/uploads/certs/english-proficiency.pdf?v=1"
+preview: "/uploads/certs/english-proficiency-preview.webp?v=1"
 order: 3
 ---
 English Proficiency Assessment — total score **503** (Listening 51,

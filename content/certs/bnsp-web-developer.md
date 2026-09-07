@@ -8,8 +8,8 @@ tags:
   - "Web Development"
   - "BNSP"
   - "Skema Pengembang Web"
-file: "/uploads/certs/bnsp-web-developer.pdf"
-preview: "/uploads/certs/bnsp-web-developer-preview.webp"
+file: "/uploads/certs/bnsp-web-developer.pdf?v=1"
+preview: "/uploads/certs/bnsp-web-developer-preview.webp?v=1"
 order: 1
 ---
 Sertifikat Kompetensi resmi negara di bidang Komunikasi dan Informatika —

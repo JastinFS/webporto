@@ -9,8 +9,8 @@ tags:
   - "LLM"
   - "Prompt Engineering"
   - "Responsible AI"
-file: "/uploads/certs/ai-literacy.pdf"
-preview: "/uploads/certs/ai-literacy-preview.webp"
+file: "/uploads/certs/ai-literacy.pdf?v=1"
+preview: "/uploads/certs/ai-literacy-preview.webp?v=1"
 order: 2
 ---
 Program 16 JP mencakup Introduction to AI, Prompt Engineering, Generative AI,
