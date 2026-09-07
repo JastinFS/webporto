@@ -1,16 +1,19 @@
 # ============================================================
 #  Decap CMS — panel admin konten portfolio
-#  Buka di:  <alamat-website>/admin/
+#  Buka di:  https://jastin.xyz/admin/
 #
-#  GANTI baris `repo:` di bawah dengan repo GitHub kamu
-#  (format: username/nama-repo) setelah kamu pilih hosting.
-#  Panduan lengkap ada di DEPLOY.md.
+#  Login GitHub-nya lewat OAuth handler di Cloudflare Pages Functions
+#  (functions/api/auth.js + callback.js). Butuh 2 env var di project
+#  Cloudflare Pages: GITHUB_OAUTH_ID & GITHUB_OAUTH_SECRET.
+#  Langkah lengkap ada di DEPLOY.md bagian "Admin panel".
 # ============================================================
 
 backend:
   name: github
-  repo: JastinFS/portfolio        # <-- GANTI ke "username/nama-repo" milikmu
+  repo: JastinFS/webporto
   branch: main
+  base_url: https://jastin.xyz
+  auth_endpoint: api/auth
 
 # Membuat tombol "Working with a local repo" saat dev:
 #   1) jalankan:  npx decap-server

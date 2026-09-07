@@ -1,114 +1,87 @@
-# Deploy & Panel Admin (edit tanpa ribet)
+# Deploy & Panel Admin
 
-Situs ini **statis** — hasil `npm run build` (folder `dist/`) bisa ditaruh di
-hosting gratis mana pun. Konten (project, about, skills, kontak, CV) ada di
-folder [`content/`](content/) dan bisa diedit lewat **panel admin** di `/admin/`.
+- **Live:** https://jastin.xyz — hosting **Cloudflare Pages**, auto-build dari
+  repo GitHub `JastinFS/webporto` tiap `git push` ke branch `main`.
+- **Build:** `npm run build` → output `dist/`.
+- **Konten** (project, about, skills, kontak, CV, hero) ada di folder
+  [`content/`](content/) + gambar di [`public/uploads/`](public/uploads/).
 
----
-
-## A. Edit konten SEKARANG (di komputer, tanpa hosting)
-
-1. Terminal 1:
-   ```bash
-   npx decap-server
-   ```
-2. Terminal 2:
-   ```bash
-   npm run dev
-   ```
-3. Buka **http://localhost:5173/admin/** → klik **"Work with Local Repo"** bila
-   diminta (tanpa login).
-4. Tambah / edit project → **Publish**. File `.md` di `content/projects/`
-   langsung berubah dan situs otomatis reload.
-
-> Gambar yang di-upload lewat panel masuk ke `public/uploads/`.
-
----
-
-## B. Kalau sudah punya hosting — biar bisa edit dari mana saja
-
-Langkah wajib sekali saja: **taruh kode di GitHub**.
+Deploy = commit + push:
 
 ```bash
-cd portfolio
-git init
-git add .
-git commit -m "Portfolio awal"
-# buat repo kosong di github.com, lalu:
-git remote add origin https://github.com/JastinFS/NAMA-REPO.git
-git branch -M main
-git push -u origin main
+git add -A
+git commit -m "update konten"
+git push
 ```
 
-Lalu buka [`public/admin/config.yml`](public/admin/config.yml) dan ganti baris:
-
-```yml
-repo: JastinFS/portfolio      # <- ganti "portfolio" jadi nama repo kamu
-```
-
-Commit & push perubahan itu.
-
-### Pilihan hosting
-
-| Hosting | Cara deploy | Panel admin |
-| --- | --- | --- |
-| **Netlify** (paling mulus) | Connect repo → build `npm run build`, publish `dist` | Aktifkan **Identity** + **Git Gateway** (lihat B.1) |
-| **Vercel** | Import repo → framework "Vite", otomatis | Perlu OAuth GitHub (lihat B.2) |
-| **GitHub Pages** | Actions → deploy `dist` | Perlu OAuth GitHub (lihat B.2) |
-| **Cloudflare Pages** | Connect repo → build `npm run build`, output `dist` | Perlu OAuth GitHub (lihat B.2) |
-
-Setiap kali kamu klik **Publish** di panel, hosting otomatis rebuild &
-situs update dalam ~1 menit.
+Cloudflare rebuild otomatis, live ~1–2 menit.
 
 ---
 
-### B.1 — Netlify (rekomendasi: paling sedikit langkah)
+## Panel admin (`/admin/`) — edit project dari HP/laptop mana pun
 
-1. netlify.com → **Add new site → Import from Git** → pilih repo.
-   Build command `npm run build`, publish directory `dist`.
-2. Site settings → **Identity** → **Enable Identity**.
-3. Identity → **Registration** → set **Invite only**, lalu **Invite users**
-   → masukkan emailmu, cek email, set password.
-4. Identity → **Services** → **Enable Git Gateway**.
-5. Edit `public/admin/config.yml`, ganti blok `backend:` jadi:
-   ```yml
-   backend:
-     name: git-gateway
-     branch: main
-   ```
-   Commit & push.
-6. Selesai. Buka `https://situsmu.netlify.app/admin/` → login → edit project.
+Panel Decap CMS-nya sudah ada di `https://jastin.xyz/admin/`. Login GitHub-nya
+lewat OAuth handler yang jalan sebagai **Cloudflare Pages Functions**
+(`functions/api/auth.js` + `functions/api/callback.js` — sudah di repo).
 
-### B.2 — Vercel / GitHub Pages / Cloudflare (backend GitHub)
+Sisa **2 langkah manual** (sekali saja):
 
-Biarkan `backend: name: github` di `config.yml`. Butuh satu "jembatan" OAuth
-(sekali setup, gratis). Cara termudah pakai **Cloudflare Worker**:
+### 1. Buat GitHub OAuth App
 
-1. Buat GitHub OAuth App: github.com → Settings → Developer settings →
-   **OAuth Apps → New**. Homepage = URL situsmu.
-   Authorization callback URL = `https://<worker-kamu>.workers.dev/callback`.
-   Catat **Client ID** & **Client Secret**.
-2. Deploy worker siap-pakai:
-   `https://github.com/sterlingcm/netlify-cms-oauth` atau
-   `https://github.com/i40west/netlify-cms-cloudflare-pages`
-   (isi `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`).
-3. Tambah `base_url` ke `config.yml`:
-   ```yml
-   backend:
-     name: github
-     repo: JastinFS/NAMA-REPO
-     branch: main
-     base_url: https://<worker-kamu>.workers.dev
-   ```
-   Commit & push.
-4. Buka `https://situsmu/admin/` → **Login with GitHub**.
+github.com → **Settings → Developer settings → OAuth Apps → New OAuth App**
 
-> Kalau nanti pilih Netlify, cara B.1 jauh lebih singkat — tak perlu worker.
+| Field | Isi |
+| --- | --- |
+| Application name | `Jastin Portfolio CMS` (bebas) |
+| Homepage URL | `https://jastin.xyz` |
+| Authorization callback URL | `https://jastin.xyz/api/callback` |
+
+Setelah dibuat: catat **Client ID**, lalu **Generate a new client secret** →
+catat **Client secret** (cuma muncul sekali).
+
+### 2. Masukkan ke Cloudflare Pages
+
+Cloudflare dashboard → **Workers & Pages → (project webporto) → Settings →
+Environment variables** → **Add** (untuk *Production*):
+
+| Variable name | Value |
+| --- | --- |
+| `GITHUB_OAUTH_ID` | Client ID dari langkah 1 |
+| `GITHUB_OAUTH_SECRET` | Client secret dari langkah 1 |
+
+Simpan → **Deployments → Retry deployment** (atau `git push` sekali lagi) supaya
+env var-nya kepakai.
+
+### Selesai
+
+Buka `https://jastin.xyz/admin/` → **Login with GitHub** → authorize →
+masuk panel. Tambah/edit project → **Publish** → Cloudflare rebuild otomatis.
+
+> Kalau muncul "Not Found" dari `api.netlify.com` seperti sebelumnya, berarti
+> `base_url`/`auth_endpoint` di `public/admin/config.yml` belum ke-deploy —
+> pastikan commit terakhir sudah live di Cloudflare.
 
 ---
 
-## Ganti CV
+## Edit konten TANPA panel (lokal)
 
-Taruh file baru di `public/uploads/` (mis. `CV_Jastin_2026.pdf`), lalu di panel
-admin **Halaman & Info → Info Utama → File CV** pilih file itu. Atau edit
-`content/site.md` baris `cvFile:`.
+```bash
+npx decap-server      # terminal 1
+npm run dev           # terminal 2
+```
+
+Buka `http://localhost:5173/admin/` → **"Work with Local Repo"** (tanpa login).
+Perubahan langsung nulis file di `content/`. Lalu commit + push seperti biasa.
+
+Atau edit file `.md` di `content/` langsung pakai teks editor.
+
+---
+
+## Ganti CV / hero image / dsb.
+
+- **CV:** taruh file baru di `public/uploads/`, update `content/site.md` baris
+  `cvFile:` (atau lewat panel: Info Utama → File CV).
+- **Hero background:** ganti `public/uploads/hero-bg.jpg`, atau ubah
+  `content/site.md` baris `heroImage:`. Kegelapannya diatur di
+  `src/components/Hero.css` (blok `.hero--has-bg`).
+- **Form kontak:** key Web3Forms ada di `content/site.md` baris `formAccessKey:`.
