@@ -1,11 +1,13 @@
-import { useState } from 'react';
+import { Suspense, lazy, useState } from 'react';
 import { useReveal } from '../hooks/useReveal';
 import { PROJECTS } from '../content/load';
 import type { Project } from '../content/load';
 import { SideOrnament, RuneTick } from './Ornaments';
 import ProjectCard from './ProjectCard';
-import ProjectModal from './ProjectModal';
 import './Projects.css';
+
+// Modal + its markdown renderer only load when a project is opened.
+const ProjectModal = lazy(() => import('./ProjectModal'));
 
 export default function Projects() {
   const { ref, visible } = useReveal<HTMLElement>();
@@ -42,7 +44,11 @@ export default function Projects() {
         ))}
       </div>
 
-      {active && <ProjectModal project={active} onClose={() => setActive(null)} />}
+      {active && (
+        <Suspense fallback={null}>
+          <ProjectModal project={active} onClose={() => setActive(null)} />
+        </Suspense>
+      )}
     </section>
   );
 }
