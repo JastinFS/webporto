@@ -105,11 +105,32 @@
   z-index: 15;
 }
 .wall-note__paper {
+  position: relative;
   aspect-ratio: 1 / 1;
   background: #fff;
   border-radius: 12px;
   padding: 8px;
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
+}
+.wall-note__del {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: none;
+  background: #e5484d;
+  color: #fff;
+  font-size: 15px;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  z-index: 5;
+}
+.wall__icon-btn--danger:hover {
+  border-color: #e5484d;
+  color: #e5484d;
 }
 .wall-note__paper img {
   width: 100%;

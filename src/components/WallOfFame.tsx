@@ -71,6 +71,12 @@ export default function WallOfFame() {
   const [drag, setDrag] = useState<Record<string, Pos>>({});
   const boardRef = useRef<HTMLDivElement>(null);
 
+  // moderation: open ?wall_admin=<secret> to reveal delete controls
+  const adminKey = useMemo(() => {
+    if (typeof window === 'undefined') return '';
+    return new URLSearchParams(window.location.search).get('wall_admin') || '';
+  }, []);
+
   useEffect(() => {
     fetch('/api/wall')
       .then((r) => r.json())
@@ -78,6 +84,33 @@ export default function WallOfFame() {
       .catch(() => setNotes([]))
       .finally(() => setLoading(false));
   }, []);
+
+  const removeNote = async (id: string) => {
+    try {
+      const res = await fetch('/api/wall', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json', 'x-wall-admin': adminKey },
+        body: JSON.stringify({ id }),
+      });
+      const data = await res.json();
+      if (res.ok) setNotes(Array.isArray(data.notes) ? data.notes : []);
+    } catch {
+      /* ignore */
+    }
+  };
+  const clearAll = async () => {
+    if (!window.confirm('Hapus SEMUA catatan?')) return;
+    try {
+      const res = await fetch('/api/wall', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json', 'x-wall-admin': adminKey },
+        body: JSON.stringify({ clear: true }),
+      });
+      if (res.ok) setNotes([]);
+    } catch {
+      /* ignore */
+    }
+  };
 
   const base = useMemo(() => layoutPos(notes, mode, salt), [notes, mode, salt]);
   const posOf = (id: string) => drag[id] ?? base[id] ?? { x: 30, y: 20, rot: 0 };
@@ -167,6 +200,11 @@ export default function WallOfFame() {
           <button className="wall__leave" onClick={() => setOpen(true)}>
             Leave a note
           </button>
+          {adminKey && (
+            <button className="wall__icon-btn wall__icon-btn--danger" onClick={clearAll} title="Hapus semua">
+              🗑
+            </button>
+          )}
         </div>
       </div>
 
@@ -195,6 +233,19 @@ export default function WallOfFame() {
             >
               <div className="wall-note__paper">
                 <img src={n.doodle} alt={`Note by ${n.name}`} draggable={false} />
+                {adminKey && (
+                  <button
+                    className="wall-note__del"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      removeNote(n.id);
+                    }}
+                    onPointerDown={(e) => e.stopPropagation()}
+                    aria-label="Hapus catatan ini"
+                  >
+                    ×
+                  </button>
+                )}
               </div>
               <div className="wall-note__label">
                 <span className="wall-note__who">
