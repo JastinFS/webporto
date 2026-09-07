@@ -75,6 +75,7 @@ collections:
           - { label: "URL LinkedIn", name: "linkedin", widget: "string" }
           - { label: "File CV", name: "cvFile", widget: "file", required: false }
           - { label: "Tahun (footer)", name: "year", widget: "string" }
+          - { label: "Web3Forms Access Key (form kontak → email)", name: "formAccessKey", widget: "string", required: false, hint: "Ambil gratis di web3forms.com, tempel di sini. Kosong = form pakai mailto." }
 
       - name: "about"
         label: "About (ringkasan, pendidikan, pengalaman)"

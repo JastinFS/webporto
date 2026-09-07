@@ -81,7 +81,7 @@ export default function Hero({ onMysticEnter, onMysticLeave }: HeroProps) {
   return (
     <header
       id="hero"
-      className="hero"
+      className={`hero${HERO_BG ? ' hero--has-bg' : ''}`}
       onMouseEnter={onMysticEnter}
       onMouseLeave={onMysticLeave}
     >

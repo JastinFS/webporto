@@ -6,20 +6,46 @@ import { SITE } from '../content/load';
 import { SideOrnament, RuneDot } from './Ornaments';
 import './Contact.css';
 
+type Status = 'idle' | 'sending' | 'ok' | 'error';
+
 export default function Contact() {
   const { ref, visible } = useReveal<HTMLElement>();
   const submitRef = useMagnetic<HTMLButtonElement>(0.4);
   const [data, setData] = useState({ name: '', email: '', message: '' });
-  const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState<Status>('idle');
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    // No backend in the design — hand off to the visitor's mail client
-    // so the message actually reaches Jastin, then show the sealed state.
+
+    // Preferred path: Web3Forms delivers straight to SITE.email — no backend.
+    if (SITE.formAccessKey) {
+      setStatus('sending');
+      try {
+        const res = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({
+            access_key: SITE.formAccessKey,
+            subject: `Portfolio — pesan dari ${data.name || 'seseorang'}`,
+            from_name: data.name,
+            name: data.name,
+            email: data.email,
+            message: data.message,
+          }),
+        });
+        const json = await res.json();
+        setStatus(json.success ? 'ok' : 'error');
+      } catch {
+        setStatus('error');
+      }
+      return;
+    }
+
+    // Fallback: open the visitor's mail client with a pre-filled draft.
     const subject = encodeURIComponent(`Portfolio — pesan dari ${data.name || 'seseorang'}`);
     const body = encodeURIComponent(`${data.message}\n\n— ${data.name} (${data.email})`);
     window.location.href = `mailto:${SITE.email}?subject=${subject}&body=${body}`;
-    setSubmitted(true);
+    setStatus('ok');
   };
 
   return (
@@ -38,7 +64,7 @@ export default function Contact() {
         <h2 className="section-heading">Contact</h2>
       </div>
 
-      {submitted ? (
+      {status === 'ok' ? (
         <div className="contact__sealed">
           <div className="contact__sealed-title">Your message has been sealed.</div>
           <div className="contact__sealed-sub">I will answer the summons soon.</div>
@@ -78,13 +104,22 @@ export default function Contact() {
             />
             <span className="contact__line" />
           </label>
+
+          {status === 'error' && (
+            <p className="contact__error">
+              The letter could not be sent. Try again, or email{' '}
+              <a href={`mailto:${SITE.email}`}>{SITE.email}</a> directly.
+            </p>
+          )}
+
           <button
             ref={submitRef}
             type="submit"
             className="contact__submit"
             style={{ '--i': 3 } as CSSProperties}
+            disabled={status === 'sending'}
           >
-            <span>SEAL THE MESSAGE</span>
+            <span>{status === 'sending' ? 'SEALING…' : 'SEAL THE MESSAGE'}</span>
           </button>
         </form>
       )}

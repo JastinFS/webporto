@@ -91,6 +91,22 @@
 .contact__submit:hover::before {
   transform: translateY(0);
 }
+.contact__submit:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.contact__error {
+  margin: -14px 0 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: #e0a0a0;
+  text-align: center;
+}
+.contact__error a {
+  color: var(--gold);
+}
 
 .contact__sealed {
   max-width: 520px;

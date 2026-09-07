@@ -26,6 +26,36 @@
   object-fit: cover;
 }
 
+/* When a real backdrop image is set: dim it a touch and lean on the
+   centre spotlight to keep the title readable — the artwork stays visible. */
+.hero--has-bg .hero__bg-img {
+  filter: brightness(0.6) saturate(0.9) contrast(1.02);
+}
+.hero--has-bg .hero__veil {
+  background: linear-gradient(
+    180deg,
+    rgba(10, 8, 6, 0.5) 0%,
+    rgba(10, 8, 6, 0.4) 30%,
+    rgba(10, 8, 6, 0.52) 55%,
+    rgba(10, 8, 6, 0.88) 82%,
+    #0a0a0a 100%
+  );
+}
+.hero--has-bg .hero__spot {
+  background: radial-gradient(
+    ellipse at center,
+    rgba(10, 8, 6, 0.92) 0%,
+    rgba(10, 8, 6, 0.7) 42%,
+    rgba(10, 8, 6, 0.32) 70%,
+    rgba(10, 8, 6, 0) 100%
+  );
+}
+/* keep the runes reading over a busy backdrop */
+.hero--has-bg .hero__runes {
+  opacity: 1;
+  filter: drop-shadow(0 0 6px rgba(0, 0, 0, 0.6));
+}
+
 /* Fog ------------------------------------------------------------- */
 .hero__fog {
   position: absolute;

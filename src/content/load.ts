@@ -40,6 +40,7 @@ export interface SiteContent {
   linkedin: string;
   cvFile: string;
   year: string;
+  formAccessKey: string;
 }
 
 export interface Stat {
