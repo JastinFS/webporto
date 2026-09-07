@@ -127,3 +127,34 @@
   color: var(--muted);
 }
 
+
+/* social icons under the form ------------------------------- */
+.contact__social {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin: 44px auto 0;
+}
+.social-btn {
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  border-radius: 50%;
+  color: var(--parchment);
+  background: rgba(212, 175, 55, 0.03);
+  transition: color 0.3s ease, border-color 0.3s ease, background 0.3s ease,
+    transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s ease;
+}
+.social-btn:hover {
+  color: var(--bg);
+  border-color: #f2e2b3;
+  background: linear-gradient(140deg, #d4af37, #f2e2b3);
+  transform: translateY(-4px);
+  box-shadow: 0 10px 22px rgba(212, 175, 55, 0.3);
+}
+.social-btn:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
