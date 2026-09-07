@@ -9,5 +9,16 @@
   <body>
     <!-- Decap CMS -->
     <script src="https://cdn.jsdelivr.net/npm/decap-cms@^3.6.4/dist/decap-cms.js"></script>
+    <script>
+      // Extra sidebar item -> Wall of Fame moderation page
+      if (window.CMS && typeof window.CMS.registerAdditionalLink === 'function') {
+        window.CMS.registerAdditionalLink({
+          id: 'wall-moderation',
+          title: 'Wall of Fame (moderasi)',
+          data: '/admin/wall.html',
+          options: { iconName: 'page' },
+        });
+      }
+    </script>
   </body>
 </html>

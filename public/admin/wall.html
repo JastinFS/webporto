@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Wall of Fame — Moderasi</title>
+    <style>
+      :root { color-scheme: dark; }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+        background: #0a0a0a;
+        color: #e8dcc4;
+        padding: 28px clamp(16px, 5vw, 48px) 60px;
+      }
+      a { color: #d4af37; }
+      h1 { font-family: Georgia, "Times New Roman", serif; font-size: 22px; margin: 0 0 4px; }
+      .sub { color: #8a8098; font-size: 13px; margin: 0 0 22px; }
+      .bar { display: flex; gap: 12px; align-items: center; margin-bottom: 22px; flex-wrap: wrap; }
+      button {
+        font: inherit;
+        cursor: pointer;
+        border: 1px solid rgba(212, 175, 55, 0.4);
+        background: rgba(212, 175, 55, 0.05);
+        color: #e8dcc4;
+        padding: 8px 14px;
+        border-radius: 6px;
+      }
+      button:hover { border-color: #d4af37; }
+      button.danger { border-color: #e5484d; color: #e5484d; background: rgba(229, 72, 77, 0.08); }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 16px;
+      }
+      .card {
+        border: 1px solid rgba(212, 175, 55, 0.25);
+        border-radius: 8px;
+        padding: 12px;
+        background: #100e0b;
+      }
+      .card img {
+        width: 100%;
+        aspect-ratio: 1;
+        object-fit: contain;
+        background: #fff;
+        border-radius: 6px;
+      }
+      .who { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #8a8098; margin-top: 10px; }
+      .msg { font-weight: 700; font-size: 14px; margin: 2px 0 4px; }
+      .ts { font-size: 11px; color: #5a5460; }
+      .card button { width: 100%; margin-top: 10px; }
+      .msgbox { padding: 14px 16px; border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 8px; }
+      .empty { color: #8a8098; }
+    </style>
+  </head>
+  <body>
+    <h1>Wall of Fame — Moderasi</h1>
+    <p class="sub">Hapus doodle / pesan pengunjung. Perlu login GitHub yang sama dengan panel <a href="./">/admin/</a>.</p>
+    <div id="app"><p class="empty">Memuat…</p></div>
+
+    <script>
+      const app = document.getElementById('app');
+
+      function getToken() {
+        const keys = ['decap-cms-user', 'netlify-cms-user'];
+        for (let i = 0; i < localStorage.length; i++) {
+          const k = localStorage.key(i);
+          if (k && /-user$/.test(k) && !keys.includes(k)) keys.push(k);
+        }
+        for (const k of keys) {
+          try {
+            const raw = localStorage.getItem(k);
+            if (raw) {
+              const u = JSON.parse(raw);
+              if (u && u.token) return u.token;
+            }
+          } catch (e) {}
+        }
+        return '';
+      }
+
+      const token = getToken();
+      const authHeaders = { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token };
+
+      function fmt(ts) {
+        try { return new Date(ts).toLocaleString('id-ID'); } catch (e) { return ''; }
+      }
+
+      async function load() {
+        if (!token) {
+          app.innerHTML =
+            '<div class="msgbox">Belum login. Buka <a href="./">panel admin</a>, login dengan GitHub, lalu balik ke sini.</div>';
+          return;
+        }
+        let data;
+        try {
+          data = await (await fetch('/api/wall')).json();
+        } catch (e) {
+          app.innerHTML = '<div class="msgbox">Gagal memuat catatan.</div>';
+          return;
+        }
+        const notes = Array.isArray(data.notes) ? data.notes : [];
+        if (!data.configured) {
+          app.innerHTML = '<div class="msgbox">KV belum dikonfigurasi (binding <code>WALL</code>).</div>';
+          return;
+        }
+        render(notes);
+      }
+
+      function render(notes) {
+        if (!notes.length) {
+          app.innerHTML = '<p class="empty">Belum ada catatan.</p>';
+          return;
+        }
+        const bar =
+          '<div class="bar"><strong>' +
+          notes.length +
+          ' catatan</strong><button class="danger" id="clear">Hapus semua</button></div>';
+        const grid =
+          '<div class="grid">' +
+          notes
+            .map(
+              (n) =>
+                '<div class="card" data-id="' +
+                n.id +
+                '">' +
+                '<img src="' +
+                n.doodle +
+                '" alt="">' +
+                '<div class="who">● ' +
+                escapeHtml(n.name) +
+                '</div><div class="msg">' +
+                escapeHtml(n.title) +
+                '</div><div class="ts">' +
+                fmt(n.ts) +
+                '</div>' +
+                '<button class="danger del">Hapus</button></div>',
+            )
+            .join('') +
+          '</div>';
+        app.innerHTML = bar + grid;
+
+        document.getElementById('clear').onclick = async () => {
+          if (!confirm('Hapus SEMUA catatan?')) return;
+          const r = await fetch('/api/wall', {
+            method: 'DELETE',
+            headers: authHeaders,
+            body: JSON.stringify({ clear: true }),
+          });
+          const d = await r.json();
+          if (r.ok) render(d.notes || []);
+          else alert(d.error || 'Gagal.');
+        };
+        app.querySelectorAll('.del').forEach((btn) => {
+          btn.onclick = async () => {
+            const id = btn.closest('.card').dataset.id;
+            btn.textContent = '…';
+            const r = await fetch('/api/wall', {
+              method: 'DELETE',
+              headers: authHeaders,
+              body: JSON.stringify({ id }),
+            });
+            const d = await r.json();
+            if (r.ok) render(d.notes || []);
+            else {
+              alert(d.error || 'Gagal.');
+              btn.textContent = 'Hapus';
+            }
+          };
+        });
+      }
+
+      function escapeHtml(s) {
+        return String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+      }
+
+      load();
+    </script>
+  </body>
+</html>
