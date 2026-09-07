@@ -7,7 +7,9 @@ import './Navbar.css';
 const LINKS = [
   { id: 'about', label: 'ABOUT' },
   { id: 'skills', label: 'SKILLS' },
+  { id: 'certifications', label: 'CERTS' },
   { id: 'projects', label: 'PROJECTS' },
+  { id: 'wall', label: 'WALL' },
   { id: 'contact', label: 'CONTACT' },
 ];
 

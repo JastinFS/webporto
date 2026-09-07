@@ -6,12 +6,15 @@ import IntroLoader from './components/IntroLoader';
 import CustomCursor from './components/CustomCursor';
 import BackToTop from './components/BackToTop';
 import Navbar from './components/Navbar';
+import ErrorBoundary from './components/ErrorBoundary';
 import CursorTrail from './components/CursorTrail';
 import Hero from './components/Hero';
 import About from './components/About';
 import { Divider } from './components/Ornaments';
 import Skills from './components/Skills';
+import Certifications from './components/Certifications';
 import Projects from './components/Projects';
+import WallOfFame from './components/WallOfFame';
 import Contact from './components/Contact';
 import './App.css';
 
@@ -34,7 +37,9 @@ export default function App() {
           <About onMysticEnter={enter} onMysticLeave={leave} />
           <Divider />
           <Skills />
+          <ErrorBoundary><Certifications /></ErrorBoundary>
           <Projects />
+          <ErrorBoundary><WallOfFame /></ErrorBoundary>
           <Contact />
         </main>
         <BackToTop />

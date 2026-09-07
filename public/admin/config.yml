@@ -55,6 +55,28 @@ collections:
       - { label: "URL Demo / Live", name: "demo", widget: "string", required: false }
       - { label: "Deskripsi", name: "body", widget: "markdown", hint: "Boleh pakai bullet list & **tebal**." }
 
+  # ---------------- CERTIFICATIONS ----------------
+  - name: "certs"
+    label: "Certifications"
+    label_singular: "Certification"
+    folder: "content/certs"
+    create: true
+    delete: true
+    slug: "{{fields.title | slugify}}"
+    summary: "{{fields.order}} — {{title}}"
+    sortable_fields: ["order", "date"]
+    fields:
+      - { label: "Judul sertifikat", name: "title", widget: "string" }
+      - { label: "Penerbit", name: "issuer", widget: "string" }
+      - { label: "Tanggal (YYYY-MM-DD, untuk urutan)", name: "date", widget: "string" }
+      - { label: "Label tanggal (mis. Apr 2026)", name: "dateLabel", widget: "string" }
+      - { label: "Nomor / Credential ID", name: "credentialId", widget: "string", required: false }
+      - { label: "Tags", name: "tags", widget: "list", default: [] }
+      - { label: "File PDF sertifikat", name: "file", widget: "file" }
+      - { label: "Gambar preview (halaman 1)", name: "preview", widget: "image", required: false, choose_url: false }
+      - { label: "Urutan (kecil = duluan)", name: "order", widget: "number", default: 10, value_type: "int" }
+      - { label: "Catatan singkat", name: "body", widget: "markdown", required: false }
+
   # ---------------- HALAMAN (teks tetap) ----------------
   - name: "pages"
     label: "Halaman & Info"

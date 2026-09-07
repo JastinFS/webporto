@@ -4,7 +4,7 @@
  * ships to the browser. This file only re-exports it with types.
  */
 // @ts-expect-error — provided by the Vite plugin at build time
-import { SITE as _SITE, ABOUT as _ABOUT, SKILLS as _SKILLS, PROJECTS as _PROJECTS } from 'virtual:portfolio-content';
+import { SITE as _SITE, ABOUT as _ABOUT, SKILLS as _SKILLS, PROJECTS as _PROJECTS, CERTS as _CERTS } from 'virtual:portfolio-content';
 
 export interface SiteContent {
   name: string;
@@ -73,7 +73,21 @@ export interface Project {
   excerpt: string;
 }
 
+export interface Certification {
+  slug: string;
+  title: string;
+  issuer: string;
+  date: string;
+  dateLabel: string;
+  credentialId: string;
+  tags: string[];
+  file: string;
+  preview: string;
+  bodyHtml: string;
+}
+
 export const SITE: SiteContent = _SITE;
 export const ABOUT: AboutContent = _ABOUT;
 export const SKILLS: SkillsContent = _SKILLS;
 export const PROJECTS: Project[] = _PROJECTS;
+export const CERTS: Certification[] = _CERTS;

@@ -77,7 +77,34 @@ function build(root) {
     })
     .sort((x, y) => x.order - y.order || x.title.localeCompare(y.title));
 
-  return { site, about, skills, projects };
+  const certDir = join(dir, 'certs');
+  let certs = [];
+  try {
+    certs = readdirSync(certDir)
+      .filter((f) => f.endsWith('.md'))
+      .map((f) => {
+        const slug = f.replace(/\.md$/, '');
+        const { data, bodyHtml } = parse(readFileSync(join(certDir, f), 'utf8'));
+        return {
+          slug,
+          title: data.title ?? slug,
+          issuer: data.issuer ?? '',
+          date: data.date ?? '',
+          dateLabel: data.dateLabel ?? data.date ?? '',
+          credentialId: data.credentialId ?? '',
+          tags: Array.isArray(data.tags) ? data.tags : [],
+          file: data.file ?? '',
+          preview: data.preview ?? '',
+          order: typeof data.order === 'number' ? data.order : 99,
+          bodyHtml,
+        };
+      })
+      .sort((x, y) => x.order - y.order || (y.date > x.date ? 1 : -1));
+  } catch {
+    /* no certs dir yet */
+  }
+
+  return { site, about, skills, projects, certs };
 }
 
 export default function portfolioContent() {
@@ -92,12 +119,13 @@ export default function portfolioContent() {
     },
     load(id) {
       if (id !== RESOLVED_ID) return;
-      const { site, about, skills, projects } = build(root);
+      const { site, about, skills, projects, certs } = build(root);
       return (
         `export const SITE = ${JSON.stringify(site)};\n` +
         `export const ABOUT = ${JSON.stringify(about)};\n` +
         `export const SKILLS = ${JSON.stringify(skills)};\n` +
-        `export const PROJECTS = ${JSON.stringify(projects)};\n`
+        `export const PROJECTS = ${JSON.stringify(projects)};\n` +
+        `export const CERTS = ${JSON.stringify(certs)};\n`
       );
     },
     handleHotUpdate(ctx) {
