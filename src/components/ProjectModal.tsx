@@ -1,6 +1,8 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
+import type { MouseEvent as ReactMouseEvent } from 'react';
 import { createPortal } from 'react-dom';
 import type { Project } from '../content/load';
+import { useScrollLock } from '../hooks/useScrollLock';
 import './ProjectModal.css';
 
 export default function ProjectModal({
@@ -10,18 +12,47 @@ export default function ProjectModal({
   project: Project;
   onClose: () => void;
 }) {
+  const panelRef = useRef<HTMLDivElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+  const returnFocusRef = useRef<HTMLElement | null>(null);
+
+  useScrollLock();
+
   useEffect(() => {
+    returnFocusRef.current = document.activeElement as HTMLElement | null;
+    closeRef.current?.focus();
+
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') {
+        onClose();
+        return;
+      }
+      if (e.key === 'Tab') {
+        const panel = panelRef.current;
+        if (!panel) return;
+        const items = panel.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), input, textarea, [tabindex]:not([tabindex="-1"])',
+        );
+        if (!items.length) return;
+        const first = items[0];
+        const last = items[items.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     };
     window.addEventListener('keydown', onKey);
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
     return () => {
       window.removeEventListener('keydown', onKey);
-      document.body.style.overflow = prev;
+      returnFocusRef.current?.focus?.();
     };
   }, [onClose]);
+
+  const stop = useCallback((e: ReactMouseEvent) => e.stopPropagation(), []);
 
   const base = project.gallery.map((src, i) => ({
     key: `${project.slug}-${i}`,
@@ -33,8 +64,8 @@ export default function ProjectModal({
 
   return createPortal(
     <div className="pmodal" onClick={onClose} role="dialog" aria-modal="true" aria-label={project.title}>
-      <div className="pmodal__panel" onClick={(e) => e.stopPropagation()}>
-        <button className="pmodal__close" onClick={onClose} aria-label="Tutup">
+      <div className="pmodal__panel" ref={panelRef} onClick={stop} data-lenis-prevent>
+        <button ref={closeRef} className="pmodal__close" onClick={onClose} aria-label="Tutup">
           ×
         </button>
 

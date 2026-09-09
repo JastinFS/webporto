@@ -10,6 +10,7 @@
   justify-content: center;
   padding: 24px;
   overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 .pmodal__panel {
@@ -17,6 +18,9 @@
   width: min(880px, 100%);
   max-height: 88vh;
   overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(212, 175, 55, 0.6) rgba(255, 255, 255, 0.05);
   background: linear-gradient(165deg, rgba(40, 32, 24, 0.32), rgba(15, 12, 10, 0.42));
   backdrop-filter: blur(22px) saturate(160%);
   -webkit-backdrop-filter: blur(22px) saturate(160%);
@@ -24,6 +28,24 @@
   box-shadow: 0 30px 90px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.06);
   border-radius: 6px;
   padding: clamp(24px, 4vw, 48px);
+}
+.pmodal__panel::-webkit-scrollbar {
+  width: 10px;
+}
+.pmodal__panel::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 6px;
+}
+.pmodal__panel::-webkit-scrollbar-thumb {
+  background: rgba(212, 175, 55, 0.5);
+  border-radius: 6px;
+}
+.pmodal__panel::-webkit-scrollbar-thumb:hover {
+  background: rgba(212, 175, 55, 0.75);
+}
+.pmodal__close:focus-visible {
+  outline: 2px solid #f2e2b3;
+  outline-offset: 2px;
 }
 
 .pmodal__close {

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { PointerEvent as ReactPointerEvent } from 'react';
 import { useReveal } from '../hooks/useReveal';
 import { useMediaQuery } from '../hooks/useMediaQuery';
+import { useScrollLock } from '../hooks/useScrollLock';
 import { SideOrnament, RuneTriangle } from './Ornaments';
 import DoodleModal from './DoodleModal';
 import './WallOfFame.css';
@@ -72,6 +73,8 @@ export default function WallOfFame() {
   const [salt, setSalt] = useState('a');
   const [drag, setDrag] = useState<Record<string, Pos>>({});
   const boardRef = useRef<HTMLDivElement>(null);
+
+  useScrollLock(!!reading);
 
   // moderation: open ?wall_admin=<secret> to reveal delete controls
   const adminKey = useMemo(() => {
@@ -301,7 +304,7 @@ export default function WallOfFame() {
 
       {reading && (
         <div className="wall-read" onClick={() => setReading(null)} role="dialog" aria-modal="true">
-          <div className="wall-read__panel" onClick={(e) => e.stopPropagation()}>
+          <div className="wall-read__panel" onClick={(e) => e.stopPropagation()} data-lenis-prevent>
             <button className="wall-read__close" onClick={() => setReading(null)} aria-label="Tutup">
               ×
             </button>

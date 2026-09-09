@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { smoothScrollTo, scrollToTop } from '../utils/scroll';
 import { useMagnetic } from '../hooks/useMagnetic';
+import { useScrollLock } from '../hooks/useScrollLock';
 import { SITE } from '../content/load';
 import './Navbar.css';
 
@@ -44,12 +45,7 @@ export default function Navbar() {
     return () => obs.disconnect();
   }, []);
 
-  useEffect(() => {
-    document.body.style.overflow = menuOpen ? 'hidden' : '';
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [menuOpen]);
+  useScrollLock(menuOpen);
 
   const go = (id: string) => {
     setMenuOpen(false);

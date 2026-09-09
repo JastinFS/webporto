@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { PointerEvent as ReactPointerEvent } from 'react';
 import type { Note } from './WallOfFame';
+import { useScrollLock } from '../hooks/useScrollLock';
 import './DoodleModal.css';
 
 const COLORS = ['#1b1b1b', '#2b7fff', '#e5484d', '#22c55e', '#d4af37'];
@@ -24,6 +25,8 @@ export default function DoodleModal({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
 
+  useScrollLock();
+
   useEffect(() => {
     const c = canvasRef.current;
     if (!c) return;
@@ -38,12 +41,7 @@ export default function DoodleModal({
     ctx.lineJoin = 'round';
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
     window.addEventListener('keydown', onKey);
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    return () => {
-      window.removeEventListener('keydown', onKey);
-      document.body.style.overflow = prev;
-    };
+    return () => window.removeEventListener('keydown', onKey);
   }, [onClose]);
 
   const pos = (e: ReactPointerEvent) => {
@@ -113,7 +111,7 @@ export default function DoodleModal({
 
   return (
     <div className="doodle" onClick={onClose} role="dialog" aria-modal="true" aria-label="Leave a note">
-      <div className="doodle__panel" onClick={(e) => e.stopPropagation()}>
+      <div className="doodle__panel" onClick={(e) => e.stopPropagation()} data-lenis-prevent>
         <button className="doodle__close" onClick={onClose} aria-label="Tutup">×</button>
         <h3 className="doodle__title">Leave a note</h3>
 
